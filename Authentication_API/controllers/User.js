@@ -50,7 +50,7 @@ const userCtrl = {
       throw new Error("Invalid Credentials");
     }
     // Generate the token for Log In and to use for authentication
-    const token = jwt.sign({ id: user._id }, "process.env.JWT_SECRET", {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "3d",
     });
     res.json({
@@ -62,7 +62,11 @@ const userCtrl = {
     });
   }),
 
-  profile: asyncHandler(async (req, res) => {}),
+  profile: asyncHandler(async (req, res) => {
+    // find user for authentication using isAuthenticated Middleware
+    const user = await User.findById(req.user).select("-password");
+    res.json({ user });
+  }),
 };
 
 module.exports = userCtrl;

@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./DB/connectDB");
 const router = require("./Routes/User");
+const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 app.use("/", router);
+app.use(errorHandler);
 
 const connectApp = async () => {
   try {
@@ -16,6 +18,8 @@ const connectApp = async () => {
     app.listen(PORT, () => {
       console.log(`App is running successfully at PORT ${PORT}`);
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+  }
 };
 connectApp();
